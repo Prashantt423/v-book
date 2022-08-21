@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const coursesCtrl = require("../controllers/coursesCtrl");
+const coursesCtrl = require("../usecases/courses.usecase");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/authAdmin");
 const isTeacher = require("../middleware/isTeacher");

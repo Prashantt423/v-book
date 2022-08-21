@@ -12,10 +12,10 @@ app.use(cookieParser());
 app.use(fileUpoad({ useTempFiles: true }));
 
 //Routes
-app.use("/user", require("./routes/userRouter"));
-app.use("/api", require("./routes/upload"));
-app.use("/courses", require("./routes/courseRouter"));
-app.use("/orders", require("./routes/orderRoutes"));
+app.use("/user", require("./controller/user.route"));
+app.use("/api", require("./controller/upload.route"));
+app.use("/courses", require("./controller/course.route"));
+app.use("/orders", require("./controller/order.route"));
 app.get("/api/config/paypal", (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
