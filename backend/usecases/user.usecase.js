@@ -5,7 +5,7 @@ const Users = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendMail = require("./sendMail");
-
+const userRepository = require("../repository/user/user.repository");
 const { google } = require("googleapis");
 const { OAuth2 } = google.auth;
 
@@ -30,7 +30,7 @@ const userCtrl = {
       if (!validateEmail(email))
         return res.status(400).json({ msg: "Invalid email" });
 
-      const user = await Users.findOne({ email });
+      const user = await userRepository.getUserByEmail(email);
       if (user)
         return res.status(400).json({ msg: "This email already exists." });
 
@@ -91,7 +91,7 @@ const userCtrl = {
             }*/
       const { name, email, password, Teacher, description, headline } = user;
       //check if the user already registred
-      const check = await Users.findOne({ email });
+      const check = await userRepository.getUserByEmail(email);
       if (check)
         return res.status(400).json({ msg: "This email already exist" });
       //if not create one and save it to DB
@@ -107,8 +107,7 @@ const userCtrl = {
         await newUser.save();
         res.json({ msg: "Account has been activated!" });
       } else {
-        const newUser = new Users({ name, email, password });
-        await newUser.save();
+        await userRepository.createNewUser(name, email, password);
         res.json({ msg: "Account has been activated!" });
       }
     } catch (err) {
@@ -168,7 +167,7 @@ const userCtrl = {
        */
       console.log("forgot pass");
       const { email } = req.body;
-      const existingUser = await Users.findOne({ email });
+      const existingUser = await userRepository.getUserByEmail(email);
       if (!existingUser)
         return res.status(400).json({ msg: "That Email doesn't exist." });
 
@@ -263,7 +262,7 @@ const userCtrl = {
   },
   deleteUser: async (req, res) => {
     try {
-      await Users.findByIdAndDelete(req.params.id);
+      await userRepository.deleteUserById(req.params.id);
 
       res.json({ msg: "Deleted Success!" });
     } catch (err) {

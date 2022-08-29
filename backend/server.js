@@ -5,20 +5,16 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const fileUpoad = require("express-fileupload");
+const indexRoutes = require("./controller/index.routes");
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 app.use(fileUpoad({ useTempFiles: true }));
 
-//Routes
-app.use("/user", require("./controller/user.route"));
-app.use("/api", require("./controller/upload.route"));
-app.use("/courses", require("./controller/course.route"));
-app.use("/orders", require("./controller/order.route"));
-app.get("/api/config/paypal", (req, res) =>
-  res.send(process.env.PAYPAL_CLIENT_ID)
-);
+//Load all routes
+app.use("/", indexRoutes);
+
 app.use((err, req, res, next) => {
   // because err.status is undefined
   res.status(404).json({
