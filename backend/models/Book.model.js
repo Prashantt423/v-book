@@ -67,6 +67,14 @@ const bookSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    rating: {
+      type: Number,
+      required: true,
+    },
+    price:{
+      type : Number,
+      required: true,
+    },
     chapters: [chapterSchema],
   },
   { timestamps: true }
